@@ -5,7 +5,7 @@ from time import sleep
 #####################################################
 # GLOBAL VARIABLES
 
-openai.api_key = "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"
+openai.api_key = "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"
 MODEL = "gpt-4"
 TOKENS = 1000
 NAMES = ['Alice', 'Bob']
