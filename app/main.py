@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
-# from time import sleep
 import app.gpt as gpt
 import app.sql as sql
 import threading

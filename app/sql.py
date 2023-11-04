@@ -25,7 +25,7 @@ def update_table(id: int, addition: str):
         cursor.execute(f'SELECT so_far FROM sessions WHERE id = "{id}"')
         so_far = cursor.fetchone()[0]
         new_so_far = so_far + addition + " \n"
-        command = f'''UPDATE sessions SET so_far = ? WHERE id = "{id}"'''
+        command = f'UPDATE sessions SET so_far = ? WHERE id = "{id}"'
         cursor.execute(command, (new_so_far,))
         conn.commit()
 
@@ -41,7 +41,7 @@ def remove_row(id: int):
 def load(id: int):
     with sqlite3.connect('database.db', check_same_thread=False) as conn:
         cursor = conn.cursor()
-        command = f"""SELECT * FROM sessions WHERE id = '{id}'"""
+        command = f"SELECT * FROM sessions WHERE id = '{id}'"
         cursor.execute(command)
 
         return cursor.fetchone()
@@ -50,7 +50,7 @@ def load(id: int):
 def load_all():
     with sqlite3.connect('database.db', check_same_thread=False) as conn:
         cursor = conn.cursor()
-        command = f"""SELECT * FROM sessions"""
+        command = f"SELECT * FROM sessions"
         cursor.execute(command)
 
         for x in cursor.fetchall():
