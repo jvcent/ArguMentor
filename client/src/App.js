@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Landing } from './pages/Landing';
 import { Input } from './pages/Input';
 import { Chat } from './pages/Chat';
+import { Popup } from './pages/Popup';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/input" element={<Input />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/popup" element={<Popup/>}/>
         </Routes>
       </Router>
     </div>
