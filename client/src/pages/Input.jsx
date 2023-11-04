@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 
-export const Landing = () => {
+export const Input = () => {
     const navigate = useNavigate();
 
     const handleButtonClick = () => {
-        navigate("/input-page")
+        navigate("/input")
     }
     return (
         <div>
