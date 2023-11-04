@@ -7,8 +7,9 @@ export const Chat = () => {
         navigate("/chat")
     }
     return (
-        <div>
-            <button onClick={handleButtonClick}>Get Started</button>
+        <div className="h-screen w-screen flex flex-row items-center justify-center bg-blue-900 p-12">
+            <div className="h-full "></div>
+            <div></div>
         </div>
     )
 }
