@@ -5,16 +5,22 @@ import app.gpt as gpt
 import app.sql as sql
 import threading
 
-myapp = Flask(__name__)
+app = Flask(__name__)
 
 
-cors = CORS(myapp, resources={r"/*": {"origins": "*"}})
-myapp.config["SESSION_PERMANENT"] = False
-myapp.config["SESSION_TYPE"] = "filesystem"
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
 sql.create_table()
 
 
-@myapp.route('/start/', methods=['POST'])
+@app.route('/', methods=['GET'])
+@cross_origin()
+def index():
+    return "hello"
+
+
+@app.route('/start/', methods=['POST'])
 @cross_origin()
 def start():
     topic = request.get_json()['topic']
@@ -23,7 +29,7 @@ def start():
     return jsonify({"id": session_id})
 
 
-@myapp.route('/next/', methods=['POST'])
+@app.route('/next/', methods=['POST'])
 @cross_origin()
 def next_message():
     last_message = request.get_json()['last_message']
@@ -75,7 +81,7 @@ def _next_helper2(last_message: str, type: str, fake: str, real: str, so_far: st
     outputs["response"] = response
 
 
-@myapp.route('/answer/', methods=['POST'])
+@app.route('/answer/', methods=['POST'])
 @cross_origin()
 def answer_prompt():
     session_id = request.get_json()['id']
