@@ -1,11 +1,13 @@
 import openai
 from time import sleep
+from api import API_KEY
 # from pprint import pprint
+import os
 
 #####################################################
 # GLOBAL VARIABLES
 
-openai.api_key = "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"
+openai.api_key = API_KEY
 MODEL = "gpt-4"
 TOKENS = 1000
 NAMES = ['Archibald', 'Horatio']
