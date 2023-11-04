@@ -52,24 +52,38 @@ export const Input = () => {
 
     const handleButtonClick = async () => {
         try {
-            let topic;
+            let body;
             if (pdfUploaded) {
-                topic = JSON.stringify({ pdfText });
+                body = {topic: pdfText};
             } else {
-                topic = JSON.stringify({ userInput });
+                body = {topic: userInput};
             }
-            const response = await axios.post("http://127.0.0.1:5000/start", topic, {
+            const response = await fetch("http://127.0.0.1:5000/start/", {
+                method: "POST",
+                // mode: 'no-cors',
                 headers: {
-                    "Content-Type": "application/json",
-                }
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "POST",
+                },
+                body: JSON.stringify(body),
+            });
+            if (response.ok) {
+                console.log("Data sent successfully");
+                navigate("/chat");
+            } else {
+                console.error("Request failed with status:", response.status);
             }
-            );
-            console.log("Response from the server:", response.data);
-            navigate("/chat");
-        } catch (error) {
-            console.error("Error sending data to the server:", error);
-            // Handle errors as needed
-        }
+            // let resp = "";
+            // await response.json().then((data) => {
+            //     console.log(data);
+            //     resp = data;
+            //     // resp = data.response;
+            // });
+            } catch (error) {
+            console.log(error);
+            }
     }
 
     const { getRootProps, getInputProps } = useDropzone({
