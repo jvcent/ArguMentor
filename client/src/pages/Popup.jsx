@@ -1,6 +1,9 @@
 import axios from "axios";
 import { useState, useEffect} from "react";
+import Lottie from "lottie-react";
 import { useNavigate, useLocation } from "react-router-dom";
+import answers from "./assets/answers.json";
+import "./Input.css";
 
 export const Popup = () => {
     // props
@@ -75,8 +78,15 @@ export const Popup = () => {
     return (
         <>
         <div className="flex flex-col justify-center w-screen h-screen bg-blue-800 p-12 main-font">
-            <div className="flex flex-col justify-center w-full h-full bg-blue-900 rounded-[60px]">
-                <p className="text-white text-3xl font-bold tracking-widest mb-3 mt-12">RESULTS</p>
+            <div className="flex flex-col justify-center items-center w-full h-full bg-blue-900 rounded-[60px]" id="everything">
+                <div className="flex flex-row items-center">
+                    <p className="text-white text-3xl font-bold tracking-widest mb-3 mt-12">RESULTS</p>
+                    <Lottie
+                        animationData={answers}
+                        className="h-28"
+                    />
+                </div>
+                
                 <div className="flex flex-row mt-4 w-full h-full justify-center space-x-4">
                     <div className="w-2/5 p-3 bg-blue-300 overflow-y-auto whitespace-normal rounded-lg border-white border-2">
                         <span className="text-xl font-semibold">YOUR ANSWER</span>

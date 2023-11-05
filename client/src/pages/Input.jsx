@@ -3,7 +3,10 @@ import { useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import {Document, Page, pdfjs} from "react-pdf";
-import {Chat} from "./Chat.jsx"
+import {Chat} from "./Chat.jsx";
+import notes from "./assets/notes.json";
+import Lottie from "lottie-react";
+import "./Input.css"
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -98,9 +101,10 @@ export const Input = () => {
     
 
     return (
-        <>
-            <div className="main-font bg-blue-800 flex flex-col items-center justify-center h-screen">
-                <p className="text-white text-xl font-medium mb-6 ">Upload a PDF of your course notes or type in a specific topic that you want to revise</p>
+        <div className="bg-blue-800">
+            <div className="main-font flex flex-col items-center justify-center h-screen" id="everything">
+                <Lottie animationData={notes} className="w-64"/>
+                <p className="text-white text-xl font-medium mb-6 ">Upload a PDF of your course notes or type in a specific topic that you wish to revise</p>
                 <div className="w-full flex flex-row justify-center space-x-4">
                 <input type="text" onChange={handleUserMessage} className="bg-white mb-8 mt-2 w-1/3 text-lg drop-shadow-xl font-semibold text-blue-800 px-7 py-2 rounded-xl transition duration-200 ease-in-out focus:outline-none" placeholder="Enter a specific topic"></input>
                   <div>
@@ -117,7 +121,7 @@ export const Input = () => {
                 
                 <button onClick={handleButtonClick} className="mt-5 relative py-6 px-10 text-black text-base font-bold uppercase rounded-[50px] overflow-hidden bg-white transition-all duration-400 ease-in-out shadow-md hover:scale-105 hover:text-white hover:shadow-lg active:scale-90 before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-violet-400 before:to-blue-500 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-[50px] hover:before:left-0">Start Revising</button>
             </div>
-        </>
+        </div>
     )
     
 }
