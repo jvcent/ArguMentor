@@ -21,7 +21,7 @@ def character(person: int) -> str:
     name = NAMES[person]
 
     if person == 0:
-        return f"As {name}, respond in a sarcastic way as if you believe you are always right"
+        return f"As {name}, respond in a snarky, sarcastic way as if you believe you are always right and the other is a fool"
     else:
         return f"As {name}, respond in an overly optimistic way as if you believe that you will surely be able to convince the other if you try hard enough"
 
@@ -275,7 +275,7 @@ Firstly, confirm that the supposed correct answer is indeed correct, or use an a
 Next, read the provided debate summary and then read the answer of the observer on who is describing misinformation in the debate.
 Congratulate the observer if they are correct and explain why the observer is wrong if they are incorrect.
 
-Refer to the observer in second person in your response.
+Refer to the observer in second person in your response and limit your response to under 150 words.
 
 Here is the observer's answer: {answer}"""
     response = _prompt_failsafe(prompt)
