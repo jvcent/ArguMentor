@@ -25,7 +25,8 @@ export const Chat = () => {
       };
 
     const handleButtonClick = () => {
-        navigate("/popup", {state: {userAnswer}})
+        const combinedAnswer = active === 1 ? "Archibald was wrong. " + userAnswer : "Horatio was wrong. " + userAnswer;
+        navigate("/popup", {state: {combinedAnswer}})
     }
 
 
@@ -86,7 +87,7 @@ export const Chat = () => {
     return (
         <div className="text-white main-font h-screen w-screen flex flex-row items-center justify-center bg-blue-800 p-12 ">
             <div className="h-full w-3/5 bg-blue-900 rounded-l-[50px] flex flex-row justify-center">
-                <div className="flex flex-col justify-end"><span>Bot 1</span></div>
+                <div className="flex flex-col justify-end"><span>Archibald</span></div>
                 <ScrollToBottom className="flex flex-col h-5/6 w-5/6 justify-center items-center overflow-auto mt-3 p-3">
                     {chatMessages.map((message, index) => (
                         (index % 2 === 0 ? 
@@ -107,18 +108,18 @@ export const Chat = () => {
                         )
                     ))}
                 </ScrollToBottom>
-                <div className="flex flex-col justify-end"><span>Bot 2</span></div>
+                <div className="flex flex-col justify-end"><span>Horatio</span></div>
             </div>
 
             <div className="h-full w-2/5 bg-indigo-900 rounded-r-[50px] flex flex-col items-center">
-                <h1 className="text-2xl mt-10 font-semibold">Which chatbot went wrong?</h1>
+                <h1 className="text-2xl mt-10 font-semibold">Who was wrong?</h1>
                 <div className="flex flex-row space-x-2 justify-center">
                     <button onClick={() => setActive(1)} 
                     className={`text-xl py-2 mt-4 px-4 rounded-lg ${active === 1 ? "bg-sky-400" : "bg-sky-600"}`}>
-                        Chatbot 1</button>
+                        Archibald</button>
                     <button onClick={() => setActive(2)} 
                     className={`text-xl py-2 mt-4 px-4 rounded-lg ${active === 2 ? "bg-sky-400" : "bg-sky-600"}`}>
-                        Chatbot 2</button>
+                        Horatio</button>
                 </div>
 
                 <h1 className="text-2xl mt-12 font-semibold">Justify your answer</h1>

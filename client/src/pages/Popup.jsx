@@ -4,17 +4,16 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 export const Popup = () => {
     // props
-    // {userAnswer}
     const location = useLocation();
     const navigate = useNavigate();
-    const {userAnswer} = location.state;
-    // const userAnswer = "test"
+    const {combinedAnswer} = location.state;
+    
     const [feedback, setFeedback] = useState([''])
 
     const apiCall = async () => {
         try {
             let body;
-            body = {answer: userAnswer};
+            body = {answer: combinedAnswer};
             const response = await fetch("http://127.0.0.1:5000/answer/", {
                 method: "POST",
                 // mode: 'no-cors',
@@ -80,7 +79,7 @@ export const Popup = () => {
             <div className="grid grid-cols-2 gap-4 mt-4 ">
                 <div className="col-span-1 p-3 max-h-100 w-30 ml-10 bg-blue-200 overflow-y-auto whitespace-normal rounded-lg border-white border-2">
                     <div className="h-full flex items-center justify-center text-center">
-                    {userAnswer}
+                    {combinedAnswer}
                     </div>
                 </div>
                 <div className="col-span-1 mr-10 p-3 max-h-100 w-30 bg-blue-200 overflow-y-auto whitespace-normal rounded-lg border-white border-2">
