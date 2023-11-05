@@ -4,6 +4,7 @@ import { Landing } from './pages/Landing';
 import { Input } from './pages/Input';
 import { Chat } from './pages/Chat';
 import { Popup } from './pages/Popup';
+import { Loading } from './pages/Loading';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/input" element={<Input />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/popup" element={<Popup/>}/>
+          <Route path="/loading" element={<Loading/>}/>
         </Routes>
       </Router>
     </div>
