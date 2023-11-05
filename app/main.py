@@ -10,7 +10,6 @@ app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
-sql.create_table()
 
 
 @app.route('/', methods=['GET'])
@@ -19,19 +18,20 @@ def index():
     return "hello"
 
 
-@app.route('/start/', methods=['POST'])
+@app.route('/start/', methods=['GET', 'POST'])
 @cross_origin()
 def start():
+    sql.create_table()
     topic = request.get_json()['topic']
     question, fake, real = gpt.starter_prompt(topic)
     session_id = sql.insert_table(question, fake, real)
     return jsonify({"id": session_id})
 
 
-@app.route('/next/', methods=['POST'])
+@app.route('/next/', methods=['GET', 'POST'])
 @cross_origin()
 def next_message():
-    session_id = request.get_json()['id']
+    session_id = 1
 
     session = sql.load(session_id)
     fake, real, so_far, real_person, first_person, round, stop, last_message = session[2:]
@@ -98,10 +98,11 @@ def _next_helper2(last_message: str, type: str, fake: str, real: str, so_far: st
 @app.route('/answer/', methods=['POST'])
 @cross_origin()
 def answer_prompt():
-    session_id = request.get_json()['id']
+    session_id = 1
     answer = request.get_json()['answer']
 
     session = sql.load(session_id)
     fake, real, so_far, real_person = session[2:6]
+    sql.remove_table()
 
     return jsonify({"response": gpt.answer(answer, fake, real, so_far, real_person)})

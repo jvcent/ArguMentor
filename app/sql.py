@@ -50,10 +50,10 @@ def update_table_round(id: int):
         conn.commit()
 
 
-def remove_row(id: int):
+def remove_table():
     with sqlite3.connect('database.db', check_same_thread=False) as conn:
         cursor = conn.cursor()
-        command = f"DELETE FROM sessions WHERE id = {id}"
+        command = f"DROP TABLE IF EXISTS sessions"
         cursor.execute(command)
         conn.commit()
 
