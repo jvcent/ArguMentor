@@ -61,7 +61,7 @@ export const Chat = () => {
     useEffect(() => {
         if (supported) {
             if (!speaking) {
-              speak({ text: chatMessages[chatMessages.length - 1] , rate: 2.5});
+              speak({ text: chatMessages[chatMessages.length - 1] , rate: 1.5});
               console.log(chatMessages.length);
               console.log(speaking);
             }
@@ -102,7 +102,7 @@ export const Chat = () => {
                 <div className="flex flex-col justify-end mb-6 ml-12 text-xl font-semibold">
                 <Lottie
                     animationData={nerd}
-                    className="w-48 mb-8"
+                    className="w-36 mb-8"
                 />
                 <span>ARCHIBALD</span>
                 </div>
@@ -129,7 +129,7 @@ export const Chat = () => {
                 <div className="flex flex-col justify-end mb-6 mr-10 text-xl font-semibold">
                     <Lottie
                         animationData={boss}
-                        className="w-36"
+                        className="w-32"
                     />
                     <span>HORATIO</span>
                 </div>
@@ -139,16 +139,16 @@ export const Chat = () => {
                 <h1 className="text-2xl mt-16 font-semibold">Who was wrong?</h1>
                 <div className="flex flex-row space-x-4 justify-center w-full">
                     <button onClick={() => setActive(1)} 
-                    className={`text-xl py-3 mt-4 px-5 w-1/4 rounded-lg ${active === 1 ? "bg-sky-400" : "bg-sky-600"}`}>
+                    className={`text-md py-3 mt-4 px-4 w-1/4  rounded-lg ${active === 1 ? "bg-sky-400" : "bg-sky-600"}`}>
                         Archibald</button>
                     <button onClick={() => setActive(2)} 
-                    className={`text-xl py-2 mt-4 px-4 w-1/4 rounded-lg ${active === 2 ? "bg-sky-400" : "bg-sky-600"}`}>
+                    className={`text-md py-2 mt-4 px-4 w-1/4 rounded-lg ${active === 2 ? "bg-sky-400" : "bg-sky-600"}`}>
                         Horatio</button>
                 </div>
 
                 <h1 className="text-2xl mt-12 font-semibold">Justify your answer</h1>
                 <textarea onChange={handleUserMessage} className="justify-box text-lg h-1/2 w-5/6 p-4 bg-indigo-950 mx-6 mt-4 whitespace-normal " placeholder="Enter explanation"></textarea>
-                <button onClick={handleButtonClick} className="text-xl bg-sky-600 mt-6 py-2 w-1/6 hover:bg-sky-500 rounded-lg">Check</button>
+                <button onClick={handleButtonClick} className="text-xl bg-sky-600 mt-6 px-5 py-3 hover:bg-sky-500 rounded-lg">Check</button>
             </div>
         </div>
     )
