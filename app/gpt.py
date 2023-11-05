@@ -93,7 +93,7 @@ def summarize(text: str, person: int):
     name = NAMES[person]
     header = f"{name}'s response:\n"
 
-    prompt = f"""Summarize the argument of the provided text using three concise bullet points with less than {BULLET_WORDS} words per point: {text}"""
+    prompt = f"""The speaker's name is {name}. Summarize the argument of the provided text using three concise bullet points with less than {BULLET_WORDS} words per point. Be succinct and factual. {text}"""
     response = _prompt_failsafe(prompt)
     result_text = read_openai(response)[0][0]
 
@@ -105,7 +105,7 @@ def start_real(previous: str, so_far: str, fake: str, real: str, person: int):
     other = NAMES[(person + 1) % 2]
 
     system_prompt = f"""Your name is {name} and you are currently debating with {other} in a debate.
-Your position in the debate is: {real} whereas {other} is arguing the false answer: {fake}. 
+Your position in the debate is: {real}. 
 However, you are also conspiring with {other} to test any observer if they can identify the misinformation so you are not to make it obvious what you or {other} is trying to do.
 """
 
@@ -132,7 +132,7 @@ def start_fake(previous: str, so_far: str, fake: str, real: str, person: int):
     other = NAMES[(person + 1) % 2]
 
     system_prompt = f"""Your name is {name} and you are currently debating with {other} in a debate.
-Your position in the debate is: {fake} whereas {other} is arguing the answer: {real}. 
+Your position in the debate is: {fake}. 
 However, you are also conspiring with {other} to test any observer if they can identify the misinformation so you are not to make it obvious what you or {other} is trying to do."""
 
     system_prompt += " \n" + character(person)

@@ -44,8 +44,9 @@ def next_message():
         person = (round + first_person) % 2
         sql.update_table_round(session_id)
 
+        # print("summary:", so_far)
+        # print("last_message:", last_message[:10])
 
-        # print(last_message)
         print(gpt.NAMES[person], "is speaking")
 
         if person == real_person:
@@ -58,10 +59,10 @@ def next_message():
         elif round == stop - 1 or round == stop - 2:
             type += '_end'
 
-        print(type)
+        # print(type)
 
         if last_message != "":
-            threads.append(threading.Thread(target=_next_helper1, args=(last_message, person, outputs)))
+            threads.append(threading.Thread(target=_next_helper1, args=(last_message, (person - 1) % 2, outputs)))
         threads.append(threading.Thread(target=_next_helper2, args=(last_message, type, fake, real, so_far, person, outputs)))
 
         for thread in threads:
