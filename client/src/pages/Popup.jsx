@@ -1,26 +1,73 @@
 import axios from "axios";
 import { useState, useEffect} from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const Popup = () => {
+    // props
     // {userAnswer}
+    const location = useLocation();
     const navigate = useNavigate();
-    const [userAnswer, setUserAnswer] = useState('')
-    const [feedback, setFeedback] = useState('')
+    const {userAnswer} = location.state;
+    // const userAnswer = "test"
+    const [feedback, setFeedback] = useState([''])
+
+    const apiCall = async () => {
+        try {
+            let body;
+            body = {answer: userAnswer};
+            const response = await fetch("http://127.0.0.1:5000/answer/", {
+                method: "POST",
+                // mode: 'no-cors',
+                headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "",
+                "Access-Control-Allow-Headers": "",
+                "Access-Control-Allow-Methods": "POST",
+                },
+                body: JSON.stringify(body),
+            });
+            // if (response.ok) {
+            //     console.log("Data sent successfully");
+            //     navigate("/chat");
+            // } else {
+            //     console.error("Request failed with status:", response.status);
+            // }
+            let resp = "";
+            await response.json().then((data) => {
+                console.log(data);
+                // resp = data;
+                resp = data.response;
+                setFeedback((prev) => [...prev, resp])
+            });
+            } catch (error) {
+            console.log(error);
+            }
+    }
 
     useEffect(() => {
-        // Make an asynchronous request to your backend to fetch feedback
-        const fetchFeedback = async () => {
-            try {
-                const response = await axios.get("http://127.0.0.1:5000/answer/"); // Replace with the actual endpoint to fetch feedback
-                setFeedback(response.data); // Assuming your feedback is a string
-            } catch (error) {
-                console.error("Error fetching feedback:", error);
-            }
-        };
-
-        fetchFeedback(); // Call the function to fetch feedback when the component mounts
+        // Call the apiCall function when the component mounts
+        apiCall();
     }, []);
+
+    // useEffect(() => {
+    //     // Make an asynchronous request to your backend to fetch feedback
+    //     const fetchFeedback = async () => {
+    //         try {
+    //             const response = await fetch("http://127.0.0.1:5000/answer/");
+    //             if (response.ok) {
+    //                 const data = await response.json();
+    //                 const responseText = data.response
+    //                 setFeedback(responseText);
+    //             } else {
+    //                 console.error('Failed to fetch chat messages')
+    //             }
+    //         } catch (error) {
+    //             console.error("API Call Error:", error);
+    //         }
+    //     };
+
+    //     fetchFeedback(); // Call the function to fetch feedback when the component mounts
+    // }, []);
 
     const handleButtonClick = () => {
         navigate('/input')
@@ -33,20 +80,12 @@ export const Popup = () => {
             <div className="grid grid-cols-2 gap-4 mt-4 ">
                 <div className="col-span-1 p-3 max-h-100 w-30 ml-10 bg-blue-200 overflow-y-auto whitespace-normal rounded-lg border-white border-2">
                     <div className="h-full flex items-center justify-center text-center">
-                    {/* {userAnswer} */}
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam faucibus sapien justo, non convallis nulla tincidunt nec.
-                    Aliquam erat volutpat. Vivamus tristique fringilla quam, nec lacinia tortor eleifend vel. Phasellus malesuada urna et massa rhoncus, vel fringilla tortor malesuada.
-                    Quisque vestibulum, ipsum ac tempus gravida, purus neque volutpat tortor, a varius urna elit non mi. Nullam malesuada tortor nec tellus blandit, eget congue justo feugiat.
-                    Sed id sollicitudin est. Sed bibendum, dui vel accumsan bibendum, erat lorem congue justo, nec sollicitudin lectus ligula ac justo. Sed euismod, nisl eget ultricies ultrices,
+                    {userAnswer}
                     </div>
                 </div>
                 <div className="col-span-1 mr-10 p-3 max-h-100 w-30 bg-blue-200 overflow-y-auto whitespace-normal rounded-lg border-white border-2">
                     <div className="h-full flex items-center justify-center text-center">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam faucibus sapien justo, non convallis nulla tincidunt nec.
-                        Aliquam erat volutpat. Vivamus tristique fringilla quam, nec lacinia tortor eleifend vel. Phasellus malesuada urna et massa rhoncus, vel fringilla tortor malesuada.
-                        Quisque vestibulum, ipsum ac tempus gravida, purus neque volutpat tortor, a varius urna elit non mi. Nullam malesuada tortor nec tellus blandit, eget congue justo feugiat.
-                        Sed id sollicitudin est. Sed bibendum, dui vel accumsan bibendum, erat lorem congue justo, nec sollicitudin lectus ligula ac justo. Sed euismod, nisl eget ultricies ultrices,
-                        {/* {feedback} */}
+                        {feedback}
                     </div>
                 </div>
             </div>

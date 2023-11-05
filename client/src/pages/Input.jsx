@@ -52,6 +52,7 @@ export const Input = () => {
       };
 
     const handleButtonClick = async () => {
+        navigate("/loading");
         try {
             let body;
             if (pdfUploaded) {
@@ -72,7 +73,6 @@ export const Input = () => {
             });
             if (response.ok) {
                 console.log("Data sent successfully");
-                navigate("/chat");
             } else {
                 console.error("Request failed with status:", response.status);
             }

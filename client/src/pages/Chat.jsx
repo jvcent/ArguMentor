@@ -2,6 +2,8 @@ import "./Chat.css"
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
+import { useCallback } from "react";
+import { Popup } from "./Popup";
 
 export const Chat = () => {
     // const location = useLocation();
@@ -12,43 +14,54 @@ export const Chat = () => {
     // console.log("data:", data);
     const navigate = useNavigate();
 
-    const handleButtonClick = () => {
-        navigate("/popup")
-    }
+
 
     const [active, setActive] = useState();
+    const [userAnswer, setUserAnswer] = useState('');
+
+    const handleUserMessage = (e) => {
+        e.preventDefault();
+        setUserAnswer(e.target.value);
+      };
+
+    const handleButtonClick = () => {
+        navigate("/popup", {state: {userAnswer}})
+    }
+
 
     const [chatMessages, setChatMessages] = useState([]);
 
-    const [apiCall, setApiCall] = useState([])
+    const [isFetching, setIsFetching] = useState(false);
 
-
-    const fetchChatMessages = async () => {
+    const fetchChatMessages = useCallback(async () => {
         try {
-            setActive(true);
             const response = await fetch("http://127.0.0.1:5000/next/");
             if (response.ok) {
                 const data = await response.json();
                 const responseText = data.response
+                if (responseText === "STOP") {return;}
                 setChatMessages((prevMessages) => [...prevMessages, responseText]);
-            } else {
+            } 
+            else {
                 console.error('Failed to fetch chat messages')
             }
         } catch (error) {
             console.error("Next API Call Error:", error);
         } finally {
-            setActive(false); // Reset the API call status when done
-        }
+            setIsFetching(false); // Indicate that the API call is finished
+          }
 
-    }
+    }, []);
 
     useEffect(() => {
-        if (!active) { // Check if an API call is not in progress
-          setTimeout(() => {
-            fetchChatMessages();
+        const intervalId = setInterval(() => {
+            // Only fetch messages if not currently fetching
+            if (!isFetching) {
+              fetchChatMessages();
+            }
           }, 5000);
-        }
-      }, [chatMessages, active]);
+          return () => clearInterval(intervalId);
+        }, [isFetching, fetchChatMessages]);
 
     // useEffect(() => {
 
@@ -109,7 +122,7 @@ export const Chat = () => {
                 </div>
 
                 <h1 className="text-2xl mt-12 font-semibold">Justify your answer</h1>
-                <textarea className="justify-box h-1/2 w-5/6 p-4 bg-indigo-950 mx-6 mt-4 whitespace-normal " placeholder="Enter explanation"></textarea>
+                <textarea onChange={handleUserMessage} className="justify-box h-1/2 w-5/6 p-4 bg-indigo-950 mx-6 mt-4 whitespace-normal " placeholder="Enter explanation"></textarea>
                 <button onClick={handleButtonClick} className="text-xl bg-sky-600 mt-6 py-2 w-1/6 hover:bg-sky-500 rounded-lg">Check</button>
             </div>
         </div>
