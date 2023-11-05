@@ -1,6 +1,6 @@
 import openai
 from time import sleep
-from api import API_KEY
+from app.api import API_KEY
 # from pprint import pprint
 import os
 
