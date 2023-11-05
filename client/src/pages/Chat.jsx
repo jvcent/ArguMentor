@@ -2,6 +2,7 @@ import "./Chat.css"
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
+import { useCallback } from "react";
 
 export const Chat = () => {
     // const location = useLocation();
@@ -20,35 +21,37 @@ export const Chat = () => {
 
     const [chatMessages, setChatMessages] = useState([]);
 
-    const [apiCall, setApiCall] = useState([])
+    const [isFetching, setIsFetching] = useState(false);
 
-
-    const fetchChatMessages = async () => {
+    const fetchChatMessages = useCallback(async () => {
         try {
-            setActive(true);
             const response = await fetch("http://127.0.0.1:5000/next/");
             if (response.ok) {
                 const data = await response.json();
                 const responseText = data.response
+                if (responseText === "STOP") {return;}
                 setChatMessages((prevMessages) => [...prevMessages, responseText]);
-            } else {
+            } 
+            else {
                 console.error('Failed to fetch chat messages')
             }
         } catch (error) {
             console.error("Next API Call Error:", error);
         } finally {
-            setActive(false); // Reset the API call status when done
-        }
+            setIsFetching(false); // Indicate that the API call is finished
+          }
 
-    }
+    }, []);
 
     useEffect(() => {
-        if (!active) { // Check if an API call is not in progress
-          setTimeout(() => {
-            fetchChatMessages();
+        const intervalId = setInterval(() => {
+            // Only fetch messages if not currently fetching
+            if (!isFetching) {
+              fetchChatMessages();
+            }
           }, 5000);
-        }
-      }, [chatMessages, active]);
+          return () => clearInterval(intervalId);
+        }, [isFetching, fetchChatMessages]);
 
     // useEffect(() => {
 
