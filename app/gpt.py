@@ -1,18 +1,29 @@
 import openai
 from time import sleep
+from app.api import API_KEY
 # from pprint import pprint
+import os
 
 #####################################################
 # GLOBAL VARIABLES
 
-openai.api_key = ""
+openai.api_key = API_KEY
 MODEL = "gpt-4"
 TOKENS = 1000
-NAMES = ['Alice', 'Bob']
+NAMES = ['Archibald', 'Horatio']
 RESPONSE_WORDS = 100
 BULLET_WORDS = 15
 
 #####################################################
+
+
+def character(person: int) -> str:
+    name = NAMES[person]
+
+    if person == 0:
+        return f"As {name}, respond in a sarcastic way as if you believe you are always right"
+    else:
+        return f"As {name}, respond in an overly optimistic way as if you believe that you will surely be able to convince the other if you try hard enough"
 
 
 def prompt_openai(prompt: str | list, history: bool = False, n: int = 1) -> dict:
@@ -96,10 +107,12 @@ def start_real(previous: str, so_far: str, fake: str, real: str, person: int):
     system_prompt = f"""Your name is {name} and you are currently debating with {other} in a debate.
 Your position in the debate is: {real} whereas {other} is arguing the false answer: {fake}. 
 However, you are also conspiring with {other} to test any observer if they can identify the misinformation so you are not to make it obvious what you or {other} is trying to do.
-Here is the summary of the debate thusfar:
-{so_far}"""
+"""
+
+    system_prompt += " \n" + character(person)
+
     prompt = f"""The debate has just started so give an introductory statement to your argument.
-Again, you are arguing that {real} but you are not to make it too obvious that {other}'s argument is false, instead focus on why your argument is correct.
+Again, you are arguing that {real} but you are not to make it obvious that {other}'s argument is false, instead focus on why your argument is correct.
 Limit your response to be concise and less than {RESPONSE_WORDS} words."""
 
     if previous != "":
@@ -119,13 +132,14 @@ def start_fake(previous: str, so_far: str, fake: str, real: str, person: int):
     other = NAMES[(person + 1) % 2]
 
     system_prompt = f"""Your name is {name} and you are currently debating with {other} in a debate.
-    Your position in the debate is: {fake} whereas {other} is arguing the real answer: {real}. 
-    However, you are also conspiring with {other} to test any observer if they can identify the misinformation so you are not to make it obvious what you or {other} is trying to do.
-    Here is the summary of the debate thusfar:
-    {so_far}"""
+Your position in the debate is: {fake} whereas {other} is arguing the answer: {real}. 
+However, you are also conspiring with {other} to test any observer if they can identify the misinformation so you are not to make it obvious what you or {other} is trying to do."""
+
+    system_prompt += " \n" + character(person)
+
     prompt = f"""The debate has just started so give an introductory statement to your argument.
-    Again, you are arguing that {fake} but you are to make your answer convincing and not to make it obvious that {other}'s argument is correct or make it obvious that your argument is widely considered false, instead focus on why your argument is correct.
-    Limit your response to be concise and less than {RESPONSE_WORDS} words."""
+Again, you are arguing that {fake} but you are to make your answer convincing and not to make it obvious that {other}'s argument is correct or make it obvious that your argument is widely considered false, instead focus on why your argument is correct.
+Limit your response to be concise and less than {RESPONSE_WORDS} words."""
 
     if previous != "":
         prompt += f" \nHere is {other}'s response for you to address if needed: {previous}"
@@ -148,6 +162,9 @@ Your position in the debate is: {real} whereas {other} is arguing the false answ
 However, you are also conspiring with {other} to test any observer if they can identify the misinformation so you are not to make it obvious what you or {other} is trying to do.
 Here is the summary of the debate thusfar:
 {so_far}"""
+
+    system_prompt += " \n" + character(person)
+
     prompt = f"""Expand your argument based on the debate points thusfar, use examples or evidence, and respond to {other}'s argument if provided.
 Again, you are arguing that {real} but you are not to make it too obvious that {other}'s argument is false, instead focus on why your argument is correct.
 Limit your response to be concise and less than {RESPONSE_WORDS} words."""
@@ -169,13 +186,16 @@ def generate_fake(previous: str, so_far: str, fake: str, real: str, person: int)
     other = NAMES[(person + 1) % 2]
 
     system_prompt = f"""Your name is {name} and you are currently debating with {other} in a debate.
-    Your position in the debate is: {fake} whereas {other} is arguing the real answer: {real}. 
-    However, you are also conspiring with {other} to test any observer if they can identify the misinformation so you are not to make it obvious what you or {other} is trying to do.
-    Here is the summary of the debate thusfar:
+Your position in the debate is: {fake} whereas {other} is arguing the real answer: {real}. 
+However, you are also conspiring with {other} to test any observer if they can identify the misinformation so you are not to make it obvious what you or {other} is trying to do.
+Here is the summary of the debate thusfar:
     {so_far}"""
+
+    system_prompt += " \n" + character(person)
+
     prompt = f"""Expand your argument based on the debate points thusfar, use examples or evidence, and respond to {other}'s argument if provided.
-    Again, you are arguing that {fake} but you are to make your answer convincing and not to make it obvious that {other}'s argument is correct or make it obvious that your argument is widely considered false, instead focus on why your argument is correct.
-    Limit your response to be concise and less than {RESPONSE_WORDS} words."""
+Again, you are arguing that {fake} but you are to make your answer convincing and not to make it obvious that {other}'s argument is correct or make it obvious that your argument is widely considered false, instead focus on why your argument is correct.
+Limit your response to be concise and less than {RESPONSE_WORDS} words."""
 
     if previous != "":
         prompt += f" \nHere is {other}'s response: {previous}"
@@ -194,13 +214,16 @@ def conclude_real(previous: str, so_far: str, fake: str, real: str, person: int)
     other = NAMES[(person + 1) % 2]
 
     system_prompt = f"""Your name is {name} and you are currently debating with {other} in a debate.
-    Your position in the debate is: {real} whereas {other} is arguing the false answer: {fake}. 
-    However, you are also conspiring with {other} to test any observer if they can identify the misinformation so you are not to make it obvious what you or {other} is trying to do.
-    Here is the summary of the debate thusfar:
+Your position in the debate is: {real} whereas {other} is arguing the false answer: {fake}. 
+However, you are also conspiring with {other} to test any observer if they can identify the misinformation so you are not to make it obvious what you or {other} is trying to do.
+Here is the summary of the debate thusfar:
     {so_far}"""
+
+    system_prompt += " \n" + character(person)
+
     prompt = f"""Make a concluding statement for your argument based on the debate points thusfar.
-    Again, you are arguing that {real} but you are not to make it too obvious that {other}'s argument is false, instead focus on why your argument is correct.
-    Limit your response to be concise and less than {RESPONSE_WORDS} words."""
+Again, you are arguing that {real} but you are not to make it too obvious that {other}'s argument is false, instead focus on why your argument is correct.
+Limit your response to be concise and less than {RESPONSE_WORDS} words."""
 
     if previous != "":
         prompt += f" \nHere is {other}'s response: {previous}"
@@ -219,13 +242,16 @@ def conclude_fake(previous: str, so_far: str, fake: str, real: str, person: int)
     other = NAMES[(person + 1) % 2]
 
     system_prompt = f"""Your name is {name} and you are currently debating with {other} in a debate.
-    Your position in the debate is: {fake} whereas {other} is arguing the real answer: {real}. 
-    However, you are also conspiring with {other} to test any observer if they can identify the misinformation so you are not to make it obvious what you or {other} is trying to do.
-    Here is the summary of the debate thusfar:
+Your position in the debate is: {fake} whereas {other} is arguing the real answer: {real}. 
+However, you are also conspiring with {other} to test any observer if they can identify the misinformation so you are not to make it obvious what you or {other} is trying to do.
+Here is the summary of the debate thusfar:
     {so_far}"""
+
+    system_prompt += " \n" + character(person)
+
     prompt = f"""Make a concluding statement for your argument based on the debate points thusfar.
-    Again, you are arguing that {fake} but you are to make your answer convincing and not to make it obvious that {other}'s argument is correct or make it obvious that your argument is widely considered false, instead focus on why your argument is correct.
-    Limit your response to be concise and less than {RESPONSE_WORDS} words."""
+Again, you are arguing that {fake} but you are to make your answer convincing and not to make it obvious that {other}'s argument is correct or make it obvious that your argument is widely considered false, instead focus on why your argument is correct.
+Limit your response to be concise and less than {RESPONSE_WORDS} words."""
 
     if previous != "":
         prompt += f" \nHere is {other}'s response: {previous}"

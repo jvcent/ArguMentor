@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
-# from time import sleep
 import app.gpt as gpt
 import app.sql as sql
 import threading
@@ -11,7 +10,6 @@ app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
-sql.create_table()
 
 
 @app.route('/', methods=['GET'])
@@ -20,47 +18,63 @@ def index():
     return "hello"
 
 
-@app.route('/start/', methods=['POST'])
+@app.route('/start/', methods=['GET', 'POST'])
 @cross_origin()
 def start():
+    sql.create_table()
     topic = request.get_json()['topic']
     question, fake, real = gpt.starter_prompt(topic)
     session_id = sql.insert_table(question, fake, real)
     return jsonify({"id": session_id})
 
 
-@app.route('/next/', methods=['POST'])
+@app.route('/next/', methods=['GET', 'POST'])
 @cross_origin()
 def next_message():
-    last_message = request.get_json()['last_message']
-    session_id = request.get_json()['id']
-    type = request.get_json()['type']
-    person = request.get_json()['person']
+    session_id = 1
 
     session = sql.load(session_id)
-    fake, real, so_far = session[2:]
+    fake, real, so_far, real_person, first_person, round, stop, last_message = session[2:]
 
-    threads = []
-    outputs = dict()
+    if round <= stop:
+        threads = []
+        outputs = dict()
 
-    if last_message != "":
-        threads.append(threading.Thread(target=_next_helper1, args=(last_message, person, outputs)))
-    threads.append(threading.Thread(target=_next_helper2, args=(last_message, type, fake, real, so_far, person, outputs)))
+        person = (round + first_person) % 2
+        sql.update_table_round(session_id)
 
-    for thread in threads:
-        thread.start()
+        if person == real_person:
+            type = 'real'
+        else:
+            type = 'fake'
 
-    for thread in threads:
-        thread.join()
+        if round == 0 or round == 1:
+            type += '_start'
+        elif round == stop or round == stop - 1:
+            type += '_end'
 
-    if last_message != "":
-        sql.update_table(session_id, outputs["summary"])
-    return jsonify({"response": outputs["response"]})
+        if last_message != "":
+            threads.append(threading.Thread(target=_next_helper1, args=(session_id, last_message, person, outputs)))
+        threads.append(threading.Thread(target=_next_helper2, args=(last_message, type, fake, real, so_far, person, outputs)))
+
+        for thread in threads:
+            thread.start()
+
+        for thread in threads:
+            thread.join()
+
+        if last_message != "":
+            sql.update_table_so_far(session_id, outputs["summary"])
+
+        return jsonify({"response": outputs["response"]})
+    else:
+        return jsonify({"response": "STOP"})
 
 
-def _next_helper1(last_message: str, person: int, outputs: dict):
+def _next_helper1(sessionid: int, last_message: str, person: int, outputs: dict):
     summary = gpt.summarize(last_message, person)
     outputs["summary"] = summary
+    sql.update_table_last(sessionid, summary)
 
 
 def _next_helper2(last_message: str, type: str, fake: str, real: str, so_far: str, person: int, outputs: dict):
@@ -84,11 +98,11 @@ def _next_helper2(last_message: str, type: str, fake: str, real: str, so_far: st
 @app.route('/answer/', methods=['POST'])
 @cross_origin()
 def answer_prompt():
-    session_id = request.get_json()['id']
+    session_id = 1
     answer = request.get_json()['answer']
-    real_person = request.get_json()['real_person']
 
     session = sql.load(session_id)
-    fake, real, so_far = session[2:]
+    fake, real, so_far, real_person = session[2:6]
+    sql.remove_table()
 
     return jsonify({"response": gpt.answer(answer, fake, real, so_far, real_person)})
