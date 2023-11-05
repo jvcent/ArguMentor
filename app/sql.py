@@ -14,7 +14,7 @@ def insert_table(question: str, fake: str, real: str) -> int:
     with sqlite3.connect('database.db', check_same_thread=False) as conn:
         cursor = conn.cursor()
         command = f"INSERT INTO sessions (question, fake, real, so_far, real_person, first_person, round, stop, last_message) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        cursor.execute(command, (question, fake, real, '', randint(0, 1), randint(0, 1), 0, randint(6, 10), ""))
+        cursor.execute(command, (question, fake, real, '', randint(0, 1), 0, 0, randint(6, 10), ""))
         conn.commit()
         return cursor.lastrowid
 

@@ -21,6 +21,7 @@ def index():
 @app.route('/start/', methods=['GET', 'POST'])
 @cross_origin()
 def start():
+    sql.remove_table()
     sql.create_table()
     topic = request.get_json()['topic']
     question, fake, real = gpt.starter_prompt(topic)
@@ -43,6 +44,9 @@ def next_message():
         person = (round + first_person) % 2
         sql.update_table_round(session_id)
 
+        print(gpt.NAMES[person])
+        print(sql.load(session_id)[-1])
+
         if person == real_person:
             type = 'real'
         else:
@@ -52,6 +56,8 @@ def next_message():
             type += '_start'
         elif round == stop or round == stop - 1:
             type += '_end'
+
+        print(type)
 
         if last_message != "":
             threads.append(threading.Thread(target=_next_helper1, args=(session_id, last_message, person, outputs)))
@@ -66,6 +72,7 @@ def next_message():
         if last_message != "":
             sql.update_table_so_far(session_id, outputs["summary"])
 
+        print("returning for", gpt.NAMES[person])
         return jsonify({"response": outputs["response"]})
     else:
         return jsonify({"response": "STOP"})
