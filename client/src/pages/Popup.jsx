@@ -5,9 +5,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 export const Popup = () => {
     // props
     // {userAnswer}
+    const location = useLocation();
     const navigate = useNavigate();
-    // const {userAnswer} = props
-    const userAnswer = "test"
+    const {userAnswer} = location.state;
+    // const userAnswer = "test"
     const [feedback, setFeedback] = useState([''])
 
     const apiCall = async () => {

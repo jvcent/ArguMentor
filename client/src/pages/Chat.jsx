@@ -14,9 +14,6 @@ export const Chat = () => {
     // console.log("data:", data);
     const navigate = useNavigate();
 
-    const handleButtonClick = () => {
-        navigate("/popup")
-    }
 
 
     const [active, setActive] = useState();
@@ -26,6 +23,10 @@ export const Chat = () => {
         e.preventDefault();
         setUserAnswer(e.target.value);
       };
+
+    const handleButtonClick = () => {
+        navigate("/popup", {state: {userAnswer}})
+    }
 
 
     const [chatMessages, setChatMessages] = useState([]);
@@ -124,7 +125,6 @@ export const Chat = () => {
                 <textarea onChange={handleUserMessage} className="justify-box h-1/2 w-5/6 p-4 bg-indigo-950 mx-6 mt-4 whitespace-normal " placeholder="Enter explanation"></textarea>
                 <button onClick={handleButtonClick} className="text-xl bg-sky-600 mt-6 py-2 w-1/6 hover:bg-sky-500 rounded-lg">Check</button>
             </div>
-            <Popup userAnswer={userAnswer} />
         </div>
     )
 }
