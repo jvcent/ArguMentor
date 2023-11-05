@@ -16,15 +16,16 @@ export const Chat = () => {
         navigate("/popup")
     }
 
-    const bots = ["Chatbot 1", "Chatbot 2"];
     const [active, setActive] = useState();
 
+    const [chatMessages, setChatMessages] = useState([]);
 
-    const [chatMessages, setChatMessages] = useState(['']);
+    const [apiCall, setApiCall] = useState([])
 
 
     const fetchChatMessages = async () => {
         try {
+            setActive(true);
             const response = await fetch("http://127.0.0.1:5000/next/");
             if (response.ok) {
                 const data = await response.json();
@@ -35,13 +36,23 @@ export const Chat = () => {
             }
         } catch (error) {
             console.error("Next API Call Error:", error);
+        } finally {
+            setActive(false); // Reset the API call status when done
         }
 
     }
 
     useEffect(() => {
-        fetchChatMessages();
-    }, [])
+        if (!active) { // Check if an API call is not in progress
+          setTimeout(() => {
+            fetchChatMessages();
+          }, 5000);
+        }
+      }, [chatMessages, active]);
+
+    // useEffect(() => {
+
+    // })
 
     // useEffect(() => {
     //     const dataToSend = data;

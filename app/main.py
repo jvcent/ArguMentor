@@ -44,6 +44,7 @@ def next_message():
         person = (round + first_person) % 2
         sql.update_table_round(session_id)
 
+
         # print(last_message)
         print(gpt.NAMES[person], "is speaking")
 
@@ -56,6 +57,8 @@ def next_message():
             type += '_start'
         elif round == stop or round == stop - 1:
             type += '_end'
+
+        print(type)
 
         if last_message != "":
             threads.append(threading.Thread(target=_next_helper1, args=(last_message, person, outputs)))
@@ -71,6 +74,9 @@ def next_message():
             sql.update_table_so_far(session_id, outputs["summary"])
 
         sql.update_table_last(session_id, outputs["response"])
+
+        print("returning for", gpt.NAMES[person])
+
         return jsonify({"response": outputs["response"]})
     else:
         return jsonify({"response": "STOP"})
