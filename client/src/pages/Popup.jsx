@@ -95,8 +95,8 @@ export const Popup = () => {
                         </div>
                     </div>
                     <div className="w-2/5 p-3 bg-blue-300 overflow-y-auto whitespace-normal rounded-lg border-white border-2">
-                        <span className="text-xl font-semibold">FEEDBACK</span>
-                        <div className="h-5/6 flex items-center justify-center text-left">
+                        <div className="text-xl font-semibold mb-2">FEEDBACK</div>
+                        <div className="h-5/6 flex flex-col items-start text-left">
                             {feedback}
                         </div>
                     </div>
