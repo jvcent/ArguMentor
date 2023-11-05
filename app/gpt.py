@@ -11,7 +11,7 @@ openai.api_key = API_KEY
 MODEL = "gpt-4"
 TOKENS = 1000
 NAMES = ['Archibald', 'Horatio']
-RESPONSE_WORDS = 100
+RESPONSE_WORDS = 75
 BULLET_WORDS = 15
 
 #####################################################
