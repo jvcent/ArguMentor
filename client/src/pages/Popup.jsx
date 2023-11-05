@@ -74,30 +74,31 @@ export const Popup = () => {
 
     return (
         <>
-        <div className="flex flex-col justify-center h-screen bg-blue-800 main-font">
-            <p className="text-white text-lg mb-10">Results</p>
-            <div className="grid grid-cols-2 gap-4 mt-4 ">
-                <div className="col-span-1 p-3 max-h-100 w-30 ml-10 bg-blue-200 overflow-y-auto whitespace-normal rounded-lg border-white border-2">
-                    <div className="h-full flex items-center justify-center text-center">
-                    {combinedAnswer}
+        <div className="flex flex-col justify-center w-screen h-screen bg-blue-800 p-12 main-font">
+            <div className="flex flex-col justify-center w-full h-full bg-blue-900 rounded-[60px]">
+                <p className="text-white text-3xl font-bold tracking-widest mb-3 mt-12">RESULTS</p>
+                <div className="flex flex-row mt-4 w-full h-full justify-center space-x-4">
+                    <div className="w-2/5 p-3 bg-blue-300 overflow-y-auto whitespace-normal rounded-lg border-white border-2">
+                        <span className="text-xl font-semibold">YOUR ANSWER</span>
+                        <div className="h-5/6 flex items-center justify-center text-left">
+                        {combinedAnswer}
+                        </div>
+                    </div>
+                    <div className="w-2/5 p-3 bg-blue-300 overflow-y-auto whitespace-normal rounded-lg border-white border-2">
+                        <span className="text-xl font-semibold">FEEDBACK</span>
+                        <div className="h-5/6 flex items-center justify-center text-left">
+                            {feedback}
+                        </div>
                     </div>
                 </div>
-                <div className="col-span-1 mr-10 p-3 max-h-100 w-30 bg-blue-200 overflow-y-auto whitespace-normal rounded-lg border-white border-2">
-                    <div className="h-full flex items-center justify-center text-center">
-                        {feedback}
-                    </div>
+                <div>
+                    <button onClick={handleButtonClick} className="mt-10 mb-12 cursor-pointer transition-all bg-blue-500 text-white px-6 py-2 rounded-lg
+                        border-blue-600
+                        border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]
+                        active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
+                        Study another topic
+                    </button>
                 </div>
-            </div>
-            {/* <div className="mt-20 ml-10 mr-10 p-4 bg-violet-200 rounded-lg border-white border-2">
-                adsf
-            </div> */}
-            <div>
-                <button onClick={handleButtonClick} className="mt-10 cursor-pointer transition-all bg-blue-500 text-white px-6 py-2 rounded-lg
-                    border-blue-600
-                    border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]
-                    active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
-                    Study another topic
-                </button>
             </div>
         </div>
         

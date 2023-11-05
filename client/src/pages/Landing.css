@@ -1,0 +1,24 @@
+button {
+    --bg: #1013be;
+    --text-color: #fff;
+    position: relative;
+    border: none;
+    background: var(--bg);
+    color: var(--text-color);
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: 0.2s;
+    border-radius: 5px;
+    opacity: 0.8;
+    letter-spacing: 1px;
+    box-shadow: #04066b 0px 7px 2px, #000 0px 8px 5px;
+  }
+  
+  button:hover {
+    opacity: 1;
+  }
+  
+  button:active {
+    top: 4px;
+    box-shadow: #2b4ec0 0px 3px 2px,#000 0px 3px 5px;
+  }
