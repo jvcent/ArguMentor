@@ -33,7 +33,7 @@ def prompt_openai(prompt: str | list, history: bool = False, n: int = 1) -> dict
         messages = [{"role": "user", "content": prompt}]
 
 
-    print(messages)
+    # print(messages)
 
     return openai.ChatCompletion.create(
         model=MODEL,

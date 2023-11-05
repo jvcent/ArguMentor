@@ -21,6 +21,7 @@ def index():
 @app.route('/start/', methods=['GET', 'POST'])
 @cross_origin()
 def start():
+    sql.remove_table()
     sql.create_table()
     topic = request.get_json()['topic']
     question, fake, real = gpt.starter_prompt(topic)
@@ -42,6 +43,9 @@ def next_message():
 
         person = (round + first_person) % 2
         sql.update_table_round(session_id)
+
+        # print(last_message)
+        print(gpt.NAMES[person], "is speaking")
 
         if person == real_person:
             type = 'real'
