@@ -37,7 +37,7 @@ def next_message():
     session = sql.load(session_id)
     fake, real, so_far, real_person, first_person, round, stop, last_message = session[2:]
 
-    if round <= stop:
+    if round < stop:
         threads = []
         outputs = dict()
 
@@ -55,7 +55,7 @@ def next_message():
 
         if round == 0 or round == 1:
             type += '_start'
-        elif round == stop or round == stop - 1:
+        elif round == stop - 1 or round == stop - 2:
             type += '_end'
 
         print(type)
