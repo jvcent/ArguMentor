@@ -1,2 +1,4 @@
 node_modules
 api.py
+database.db
+app/__pycache__
