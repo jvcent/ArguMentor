@@ -2,6 +2,7 @@ import "./Chat.css"
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
+import { Popup } from "./Popup";
 
 export const Chat = () => {
     // const location = useLocation();
@@ -16,7 +17,15 @@ export const Chat = () => {
         navigate("/popup")
     }
 
+
     const [active, setActive] = useState();
+    const [userAnswer, setUserAnswer] = useState('');
+
+    const handleUserMessage = (e) => {
+        e.preventDefault();
+        setUserAnswer(e.target.value);
+      };
+
 
     const [chatMessages, setChatMessages] = useState([]);
 
@@ -109,9 +118,10 @@ export const Chat = () => {
                 </div>
 
                 <h1 className="text-2xl mt-12 font-semibold">Justify your answer</h1>
-                <textarea className="justify-box h-1/2 w-5/6 p-4 bg-indigo-950 mx-6 mt-4 whitespace-normal " placeholder="Enter explanation"></textarea>
+                <textarea onChange={handleUserMessage} className="justify-box h-1/2 w-5/6 p-4 bg-indigo-950 mx-6 mt-4 whitespace-normal " placeholder="Enter explanation"></textarea>
                 <button onClick={handleButtonClick} className="text-xl bg-sky-600 mt-6 py-2 w-1/6 hover:bg-sky-500 rounded-lg">Check</button>
             </div>
+            <Popup userAnswer={userAnswer} />
         </div>
     )
 }
