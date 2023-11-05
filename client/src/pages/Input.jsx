@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import {Document, Page, pdfjs} from "react-pdf";
-import Chat from "./Chat.jsx"
+import {Chat} from "./Chat.jsx"
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -52,7 +52,39 @@ export const Input = () => {
       };
 
     const handleButtonClick = async () => {
-        navigate("/chat", {pdfText, userInput});
+        try {
+            let body;
+            if (pdfUploaded) {
+                body = {topic: pdfText};
+            } else {
+                body = {topic: userInput};
+            }
+            const response = await fetch("http://127.0.0.1:5000/start/", {
+                method: "POST",
+                // mode: 'no-cors',
+                headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "",
+                "Access-Control-Allow-Headers": "",
+                "Access-Control-Allow-Methods": "POST",
+                },
+                body: JSON.stringify(body),
+            });
+            if (response.ok) {
+                console.log("Data sent successfully");
+                navigate("/chat");
+            } else {
+                console.error("Request failed with status:", response.status);
+            }
+            // let resp = "";
+            // await response.json().then((data) => {
+            //     console.log(data);
+            //     // resp = data;
+            //     resp = data.response;
+            // });
+            } catch (error) {
+            console.log(error);
+            }
     }
 
     const { getRootProps, getInputProps } = useDropzone({
