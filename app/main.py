@@ -54,7 +54,7 @@ def next_message():
             type += '_end'
 
         if last_message != "":
-            threads.append(threading.Thread(target=_next_helper1, args=(session_id, last_message, person, outputs)))
+            threads.append(threading.Thread(target=_next_helper1, args=(last_message, person, outputs)))
         threads.append(threading.Thread(target=_next_helper2, args=(last_message, type, fake, real, so_far, person, outputs)))
 
         for thread in threads:
@@ -66,15 +66,15 @@ def next_message():
         if last_message != "":
             sql.update_table_so_far(session_id, outputs["summary"])
 
+        sql.update_table_last(session_id, outputs["response"])
         return jsonify({"response": outputs["response"]})
     else:
         return jsonify({"response": "STOP"})
 
 
-def _next_helper1(sessionid: int, last_message: str, person: int, outputs: dict):
+def _next_helper1(last_message: str, person: int, outputs: dict):
     summary = gpt.summarize(last_message, person)
     outputs["summary"] = summary
-    sql.update_table_last(sessionid, summary)
 
 
 def _next_helper2(last_message: str, type: str, fake: str, real: str, so_far: str, person: int, outputs: dict):

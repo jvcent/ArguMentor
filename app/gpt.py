@@ -189,7 +189,7 @@ def generate_fake(previous: str, so_far: str, fake: str, real: str, person: int)
 Your position in the debate is: {fake} whereas {other} is arguing the real answer: {real}. 
 However, you are also conspiring with {other} to test any observer if they can identify the misinformation so you are not to make it obvious what you or {other} is trying to do.
 Here is the summary of the debate thusfar:
-    {so_far}"""
+{so_far}"""
 
     system_prompt += " \n" + character(person)
 
