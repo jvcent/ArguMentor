@@ -37,15 +37,16 @@ def next_message():
     session = sql.load(session_id)
     fake, real, so_far, real_person, first_person, round, stop, last_message = session[2:]
 
-    if round <= stop:
+    if round < stop:
         threads = []
         outputs = dict()
 
         person = (round + first_person) % 2
         sql.update_table_round(session_id)
 
-        print(gpt.NAMES[person])
-        print(sql.load(session_id)[-1])
+
+        # print(last_message)
+        print(gpt.NAMES[person], "is speaking")
 
         if person == real_person:
             type = 'real'
@@ -54,13 +55,13 @@ def next_message():
 
         if round == 0 or round == 1:
             type += '_start'
-        elif round == stop or round == stop - 1:
+        elif round == stop - 1 or round == stop - 2:
             type += '_end'
 
         print(type)
 
         if last_message != "":
-            threads.append(threading.Thread(target=_next_helper1, args=(session_id, last_message, person, outputs)))
+            threads.append(threading.Thread(target=_next_helper1, args=(last_message, person, outputs)))
         threads.append(threading.Thread(target=_next_helper2, args=(last_message, type, fake, real, so_far, person, outputs)))
 
         for thread in threads:
@@ -72,16 +73,18 @@ def next_message():
         if last_message != "":
             sql.update_table_so_far(session_id, outputs["summary"])
 
+        sql.update_table_last(session_id, outputs["response"])
+
         print("returning for", gpt.NAMES[person])
+
         return jsonify({"response": outputs["response"]})
     else:
         return jsonify({"response": "STOP"})
 
 
-def _next_helper1(sessionid: int, last_message: str, person: int, outputs: dict):
+def _next_helper1(last_message: str, person: int, outputs: dict):
     summary = gpt.summarize(last_message, person)
     outputs["summary"] = summary
-    sql.update_table_last(sessionid, summary)
 
 
 def _next_helper2(last_message: str, type: str, fake: str, real: str, so_far: str, person: int, outputs: dict):
